@@ -1,16 +1,12 @@
 {
   "name": "artifact-decode",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "npx --yes vite build"
+    "build": "vite build",
+    "postinstall": "chmod +x node_modules/.bin/* 2>/dev/null || true"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
