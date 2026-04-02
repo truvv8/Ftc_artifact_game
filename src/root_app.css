@@ -1,0 +1,213 @@
+/* ═══════════════════════════════════════════════════
+   ARTIFACT DECODE — Design System
+   ═══════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg:        #ffffff;
+  --bg-raised: #f7f8fa;
+  --panel:     #f0f1f4;
+  --panel-2:   #e8eaef;
+
+  --text:      #1a1d24;
+  --text-2:    #3d434f;
+  --muted:     #6b7280;
+  --dim:       #9ca3af;
+
+  --border:    #d8dce3;
+  --border-2:  #c5cad3;
+
+  --accent:    #4f46e5;
+  --accent-2:  #7c3aed;
+  --green:     #16a34a;
+  --teal:      #0d9488;
+  --blue:      #2563eb;
+  --sky:       #0284c7;
+  --amber:     #d97706;
+  --red:       #dc2626;
+  --rose:      #e11d48;
+
+  --radius:    6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --font:      'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Shell ───────────────────────────────────── */
+
+.play-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+/* ── Back Button (replaces top bar on game pages) */
+
+.back-btn {
+  position: fixed;
+  top: 10px;
+  left: 14px;
+  z-index: 50;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.back-btn:hover {
+  color: var(--text);
+  border-color: var(--border-2);
+  background: var(--bg-raised);
+}
+
+/* ── Home / Menu ─────────────────────────────── */
+
+.decode-shell {
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.menu-wrap {
+  width: min(520px, 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+  padding: clamp(24px, 5vw, 40px);
+  display: grid;
+  gap: 14px;
+}
+
+.badge {
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(32px, 6vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 50ch;
+}
+
+.card-stack {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mode-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.mode-card:hover {
+  background: var(--panel-2);
+  border-color: var(--border-2);
+}
+
+.card--green {
+  border-left: 3px solid var(--green);
+}
+
+.card--blue {
+  border-left: 3px solid var(--blue);
+}
+
+.card-body {
+  display: grid;
+  gap: 3px;
+  flex: 1;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.card-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.card-cta {
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  flex-shrink: 0;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.mode-card:hover .card-cta {
+  color: var(--text);
+  border-color: var(--border-2);
+}
+
+/* ── Responsive ──────────────────────────────── */
+
+@media (max-width: 520px) {
+  .menu-wrap {
+    padding: 18px;
+  }
+}
