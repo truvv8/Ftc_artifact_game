@@ -135,16 +135,32 @@ function pointInTriangle(point, tri) {
 }
 
 function isInLaunchZone(point) {
-  if (pointInTriangle(point, TOP_LAUNCH_TRI) || pointInTriangle(point, BOTTOM_LAUNCH_TRI)) {
-    return true;
+  // Check all 4 corners of the robot — if ANY corner touches the launch zone, it counts
+  const r = ROBOT_RADIUS;
+  const corners = [
+    { x: point.x - r, y: point.y - r },
+    { x: point.x + r, y: point.y - r },
+    { x: point.x - r, y: point.y + r },
+    { x: point.x + r, y: point.y + r },
+    point, // also check center
+  ];
+
+  for (const c of corners) {
+    if (pointInTriangle(c, TOP_LAUNCH_TRI) || pointInTriangle(c, BOTTOM_LAUNCH_TRI)) {
+      return true;
+    }
+
+    const onLeftDepotLine =
+      c.y >= 18.2 && c.y <= 19.8 && c.x >= 0.5 && c.x <= 18.9;
+    const onRightDepotLine =
+      c.y >= 18.2 && c.y <= 19.8 && c.x >= 81.1 && c.x <= 99.5;
+
+    if (onLeftDepotLine || onRightDepotLine) {
+      return true;
+    }
   }
 
-  const onLeftDepotLine =
-    point.y >= 18.2 && point.y <= 19.8 && point.x >= 0.5 && point.x <= 18.9;
-  const onRightDepotLine =
-    point.y >= 18.2 && point.y <= 19.8 && point.x >= 81.1 && point.x <= 99.5;
-
-  return onLeftDepotLine || onRightDepotLine;
+  return false;
 }
 
 function goalForPoint(point) {
