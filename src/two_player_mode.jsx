@@ -197,36 +197,18 @@ function colorHex(code) {
   return code === "G" ? "#22c55e" : "#a855f7";
 }
 
+const AIM_ROTATE_SPEED = 3.5; // radians per second
+
 function makeRobot(team) {
-  if (team === "blue") {
-    return {
-      team,
-      x: 16,
-      y: 87,
-      vx: 0,
-      vy: 0,
-      faceX: 0,
-      faceY: -1,
-      cargo: [],
-      shootMode: false,
-      shotFx: 0,
-      charging: false,
-      chargeStart: 0,
-      chargePower: 0,
-      intake: false,
-      nextShotAt: 0,
-      nextIntakeAt: 0,
-      disabled: false,
-    };
-  }
-  return {
+  const base = {
     team,
-    x: 84,
+    x: team === "blue" ? 16 : 84,
     y: 87,
     vx: 0,
     vy: 0,
     faceX: 0,
     faceY: -1,
+    aimAngle: -Math.PI / 2, // facing up
     cargo: [],
     shootMode: false,
     shotFx: 0,
@@ -238,6 +220,7 @@ function makeRobot(team) {
     nextIntakeAt: 0,
     disabled: false,
   };
+  return base;
 }
 
 function makeFoulStats() {
@@ -530,9 +513,17 @@ function applyRobotInput(game, runtime, team, intent, phase, dt) {
   robot.x = clamp(robot.x + robot.vx * dt, ROBOT_RADIUS, 100 - ROBOT_RADIUS);
   robot.y = clamp(robot.y + robot.vy * dt, ROBOT_RADIUS, 100 - ROBOT_RADIUS);
 
-  if (intent.moveInput) {
+  if (robot.shootMode && intent.moveInput) {
+    // In shoot mode: left/right rotate aim smoothly, full analog control
+    robot.aimAngle += intent.moveX * AIM_ROTATE_SPEED * dt;
+    robot.aimAngle += -intent.moveY * AIM_ROTATE_SPEED * dt * 0.5; // up/down fine-tune
+    robot.faceX = Math.cos(robot.aimAngle);
+    robot.faceY = Math.sin(robot.aimAngle);
+  } else if (intent.moveInput) {
+    // In drive mode: snap aim to movement direction
     robot.faceX = intent.moveX;
     robot.faceY = intent.moveY;
+    robot.aimAngle = Math.atan2(intent.moveY, intent.moveX);
   }
 
   if (
@@ -1148,8 +1139,9 @@ function DecodeField({ game }) {
         const meta = TEAM_META[robot.team];
         const x = px(robot.x);
         const y = px(robot.y);
-        const fx = x + robot.faceX * 16;
-        const fy = y + robot.faceY * 16;
+        const aimLen = robot.shootMode ? 50 : 16;
+        const fx = x + robot.faceX * aimLen;
+        const fy = y + robot.faceY * aimLen;
 
         return (
           <g key={robot.team}>
@@ -1164,8 +1156,8 @@ function DecodeField({ game }) {
               strokeWidth={2}
               opacity={robot.disabled ? 0.5 : 1}
             />
-            <line x1={x} y1={y} x2={fx} y2={fy} stroke="#f59e0b" strokeWidth={2.4} />
-            <circle cx={fx} cy={fy} r={2} fill="#f59e0b" />
+            <line x1={x} y1={y} x2={fx} y2={fy} stroke="#f59e0b" strokeWidth={robot.shootMode ? 1.5 : 2.4} strokeDasharray={robot.shootMode ? "4 3" : "none"} />
+            <circle cx={fx} cy={fy} r={robot.shootMode ? 3 : 2} fill="#f59e0b" />
             {robot.shotFx > 0 && (
               <circle
                 cx={fx}
