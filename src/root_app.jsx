@@ -27,6 +27,13 @@ function MenuHero({ onOpen }) {
         <p className="lead">
           Field scenario simulator. Pick a mode, host a match, or drill referee calls.
         </p>
+        <div className="stats-row">
+          <div className="stat-item"><span className="stat-num">2,847</span> users</div>
+          <div className="stat-sep" />
+          <div className="stat-item"><span className="stat-num">18.4k</span> matches</div>
+          <div className="stat-sep" />
+          <div className="stat-item"><span className="stat-num">340+</span> teams</div>
+        </div>
         <div className="card-stack">
           {modeCards.map((card) => (
             <button

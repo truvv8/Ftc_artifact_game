@@ -136,6 +136,27 @@ body {
   max-width: 50ch;
 }
 
+.stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stat-num {
+  font-weight: 800;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-sep {
+  width: 1px;
+  height: 14px;
+  background: var(--border);
+}
+
 .card-stack {
   display: grid;
   gap: 8px;
