@@ -514,17 +514,17 @@ function applyRobotInput(game, runtime, team, intent, phase, dt) {
   robot.y = clamp(robot.y + robot.vy * dt, ROBOT_RADIUS, 100 - ROBOT_RADIUS);
 
   if (robot.shootMode && intent.moveInput) {
-    // In shoot mode: left/right rotate aim smoothly, full analog control
-    robot.aimAngle += intent.moveX * AIM_ROTATE_SPEED * dt;
-    robot.aimAngle += -intent.moveY * AIM_ROTATE_SPEED * dt * 0.5; // up/down fine-tune
+    if (intent.moveY !== 0) {
+      // W/S pressed (with or without A/D) — snap to that direction immediately
+      robot.aimAngle = Math.atan2(intent.moveY, intent.moveX);
+    } else {
+      // Only A/D — smooth rotation for fine-tuning
+      robot.aimAngle += intent.moveX * AIM_ROTATE_SPEED * dt;
+    }
     robot.faceX = Math.cos(robot.aimAngle);
     robot.faceY = Math.sin(robot.aimAngle);
-  } else if (intent.moveInput) {
-    // In drive mode: snap aim to movement direction
-    robot.faceX = intent.moveX;
-    robot.faceY = intent.moveY;
-    robot.aimAngle = Math.atan2(intent.moveY, intent.moveX);
   }
+  // Drive mode: aim does NOT change — keeps last set direction
 
   if (
     robot.intake &&
@@ -1139,9 +1139,8 @@ function DecodeField({ game }) {
         const meta = TEAM_META[robot.team];
         const x = px(robot.x);
         const y = px(robot.y);
-        const aimLen = robot.shootMode ? 50 : 16;
-        const fx = x + robot.faceX * aimLen;
-        const fy = y + robot.faceY * aimLen;
+        const fx = x + robot.faceX * 16;
+        const fy = y + robot.faceY * 16;
 
         return (
           <g key={robot.team}>
@@ -1156,8 +1155,8 @@ function DecodeField({ game }) {
               strokeWidth={2}
               opacity={robot.disabled ? 0.5 : 1}
             />
-            <line x1={x} y1={y} x2={fx} y2={fy} stroke="#f59e0b" strokeWidth={robot.shootMode ? 1.5 : 2.4} strokeDasharray={robot.shootMode ? "4 3" : "none"} />
-            <circle cx={fx} cy={fy} r={robot.shootMode ? 3 : 2} fill="#f59e0b" />
+            <line x1={x} y1={y} x2={fx} y2={fy} stroke="#f59e0b" strokeWidth={2.4} />
+            <circle cx={fx} cy={fy} r={2} fill="#f59e0b" />
             {robot.shotFx > 0 && (
               <circle
                 cx={fx}
